@@ -8,8 +8,6 @@ import {
 	UpdateDateColumn,
 	Relation
 } from 'typeorm';
-import { Ranking } from './ranking.js';
-import { Dinoz, PlayerDinozShop, PlayerIngredient, PlayerItem, PlayerQuest, PlayerReward } from './index.js';
 
 @Entity()
 export class Player {
@@ -21,28 +19,28 @@ export class Player {
 	})
 	hasImported: boolean;
 
-	@OneToOne(() => Ranking, ranking => ranking.player, {
-		cascade: true
-	})
-	rank: Relation<Ranking>;
+	// @OneToOne(() => Ranking, ranking => ranking.player, {
+	// 	cascade: true
+	// })
+	// rank: Relation<Ranking>;
 
-	@OneToMany(() => PlayerReward, reward => reward.player)
-	rewards: Relation<PlayerReward[]>;
+	// @OneToMany(() => PlayerReward, reward => reward.player)
+	// rewards: Relation<PlayerReward[]>;
 
-	@OneToMany(() => Dinoz, dinoz => dinoz.player)
-	dinoz: Relation<Dinoz[]>;
+	// @OneToMany(() => Dinoz, dinoz => dinoz.player)
+	// dinoz: Relation<Dinoz[]>;
 
-	@OneToMany(() => PlayerDinozShop, dinoz => dinoz.player)
-	dinozShop: Relation<PlayerDinozShop[]>;
+	// @OneToMany(() => PlayerDinozShop, dinoz => dinoz.player)
+	// dinozShop: Relation<PlayerDinozShop[]>;
 
-	@OneToMany(() => PlayerItem, dinoz => dinoz.player)
-	items: Relation<PlayerItem[]>;
+	// @OneToMany(() => PlayerItem, dinoz => dinoz.player)
+	// items: Relation<PlayerItem[]>;
 
-	@OneToMany(() => PlayerIngredient, dinoz => dinoz.player)
-	ingredients: Relation<PlayerIngredient[]>;
+	// @OneToMany(() => PlayerIngredient, dinoz => dinoz.player)
+	// ingredients: Relation<PlayerIngredient[]>;
 
-	@OneToMany(() => PlayerQuest, dinoz => dinoz.player)
-	quests: Relation<PlayerQuest[]>;
+	// @OneToMany(() => PlayerQuest, dinoz => dinoz.player)
+	// quests: Relation<PlayerQuest[]>;
 
 	@Column('text', {
 		nullable: true
