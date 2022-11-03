@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+
+  #Database container
+  futuramhordes_database:
+    image: postgres:13.1
+    container_name: futuramhordes_database
+    volumes:
+      - ./DB:/docker-entrypoint-initdb.d
+    networks:
+      - futuramhordes_network
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+      POSTGRES_MULTIPLE_DATABASES: futuramhordes
+    ports:
+      - "5432:5432"
+
+  futuramhordes:
+    container_name: futuramhordes
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+      args:
+        - YOUR_APP_WEB_HTTP_PORT=8080
+        - UID=1000
+        - GID=1000
+    volumes:
+      - ../.:/www
+    stdin_open: true
+    tty: true
+    networks:
+      - futuramhordes_network
+    environment:
+      # https://cli.vuejs.org/guide/mode-and-env.html#modes
+      # development is used by vue-cli-service serve
+      - NODE_ENV=development
+    ports:
+      - 8081:8081
+      - 8080:8080
+      - 8000:8000
+      - 5173:5173
+
+networks:
+  futuramhordes_network:
+    driver: bridge
