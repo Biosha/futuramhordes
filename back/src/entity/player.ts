@@ -17,90 +17,28 @@ export class Player {
 	@Column({
 		nullable: false
 	})
-	hasImported: boolean;
+	discordId: string;
 
-	// @OneToOne(() => Ranking, ranking => ranking.player, {
-	// 	cascade: true
-	// })
-	// rank: Relation<Ranking>;
-
-	// @OneToMany(() => PlayerReward, reward => reward.player)
-	// rewards: Relation<PlayerReward[]>;
-
-	// @OneToMany(() => Dinoz, dinoz => dinoz.player)
-	// dinoz: Relation<Dinoz[]>;
-
-	// @OneToMany(() => PlayerDinozShop, dinoz => dinoz.player)
-	// dinozShop: Relation<PlayerDinozShop[]>;
-
-	// @OneToMany(() => PlayerItem, dinoz => dinoz.player)
-	// items: Relation<PlayerItem[]>;
-
-	// @OneToMany(() => PlayerIngredient, dinoz => dinoz.player)
-	// ingredients: Relation<PlayerIngredient[]>;
-
-	// @OneToMany(() => PlayerQuest, dinoz => dinoz.player)
-	// quests: Relation<PlayerQuest[]>;
-
-	@Column('text', {
+	@Column({
 		nullable: true
 	})
-	customText: string;
+	discordTag: string;
 
 	@Column({
-		nullable: false
+		nullable: true
 	})
-	name: string;
+	MHName: string;
 
 	@Column({
-		nullable: false
+		nullable: true
 	})
-	eternalTwinId: string;
+	character: string;
 
 	@Column({
-		nullable: false
+		type: 'bytea',
+		nullable: true
 	})
-	money: number;
-
-	@Column({
-		nullable: false
-	})
-	quetzuBought: number;
-
-	@Column({
-		nullable: false
-	})
-	leader: boolean;
-
-	@Column({
-		nullable: false
-	})
-	engineer: boolean;
-
-	@Column({
-		nullable: false
-	})
-	cooker: boolean;
-
-	@Column({
-		nullable: false
-	})
-	shopKeeper: boolean;
-
-	@Column({
-		nullable: false
-	})
-	merchant: boolean;
-
-	@Column({
-		nullable: false
-	})
-	priest: boolean;
-
-	@Column({
-		nullable: false
-	})
-	teacher: boolean;
+	characterImage: Buffer;
 
 	@CreateDateColumn()
 	createdDate: Date;

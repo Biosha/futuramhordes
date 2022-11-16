@@ -3,17 +3,19 @@
     <img
       alt="Vue logo"
       class="logo"
-      src="@/assets/logo.svg"
+      src="@/assets/images/logo.png"
       width="125"
       height="125"
+      @click="test()"
     />
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
 
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <a v-if="!localStore.discord" id="login" href="https://discord.com/api/oauth2/authorize?client_id=1037714596343058492&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fdiscord&response_type=token&scope=identify">Login</a>
+        <a v-if="localStore.discord" @click="logout()">Logout</a>
+        <RouterLink to="/casting">Casting</RouterLink>
+        <RouterLink v-if="localStore.admin" to="/admin">Admin</RouterLink>
       </nav>
     </div>
   </header>
@@ -21,9 +23,30 @@
   <RouterView />
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import { RouterLink, RouterView } from "vue-router";
-import HelloWorld from "./components/HelloWorld.vue";
+import { defineComponent } from 'vue';
+import { localStore } from '@/stores/local';
+import { PlayerService } from "./service/playerServices";
+
+export default defineComponent({
+	name: 'App',
+  data() {
+      return {
+          localStore: localStore()
+      }
+  },
+  methods: {
+    async test(): Promise<void> {
+      await PlayerService.login(this.localStore.getDiscord!.id,`${this.localStore.getDiscord!.username}#${this.localStore.getDiscord!.discriminator}`)
+    },
+    logout(): void {
+      this.localStore.setAdmin(false);
+      this.localStore.setDiscord(undefined);
+    }
+  }
+});
+
 </script>
 
 <style scoped>
@@ -56,6 +79,7 @@ nav a {
   display: inline-block;
   padding: 0 1rem;
   border-left: 1px solid var(--color-border);
+  cursor: pointer;
 }
 
 nav a:first-of-type {
@@ -81,11 +105,14 @@ nav a:first-of-type {
 
   nav {
     text-align: left;
-    margin-left: -1rem;
+    /* margin-left: -1rem; */
     font-size: 1rem;
 
     padding: 1rem 0;
     margin-top: 1rem;
+  }
+  a:first-of-type{
+    margin-left: -1rem;
   }
 }
 </style>
