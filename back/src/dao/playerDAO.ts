@@ -10,7 +10,7 @@ const createPlayer = (newPlayer: Player): Promise<Player> => {
 const getPlayer = (eternalTwinId: string): Promise<Player | null> => {
 	return playerRepository
 		.createQueryBuilder('player')
-		.select(['player.id', 'player.discordId', 'player.MHName', 'player.character'])
+		.select(['player.id', 'player.discordId', 'player.discordTag', 'player.MHName', 'player.character'])
 		.where('player.discordId = :eId', { eId: eternalTwinId })
 		.getOne();
 };
@@ -18,8 +18,9 @@ const getPlayer = (eternalTwinId: string): Promise<Player | null> => {
 const getAllPlayers = (): Promise<Array<Player>> => {
 	return playerRepository
 		.createQueryBuilder('player')
-		.select(['player.id', 'player.discordId', 'player.MHName', 'player.character'])
+		.select(['player.id', 'player.discordId', 'player.discordTag', 'player.MHName', 'player.character'])
 		.getMany();
 };
+
 
 export { createPlayer, getPlayer, getAllPlayers };

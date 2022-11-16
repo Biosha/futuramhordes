@@ -1,22 +1,45 @@
 <template>
-  <table class="darkTable" @click="click()">
-    <thead>
-      <tr>
-        <th>Discord ID</th>
-        <th>Discord Tag</th>
-        <th>MyHordes Name</th>
-        <th>Character</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(player, index) in players" :key="index">
-        <td>{{player.discordId}}</td>
-        <td>{{player.discordTag}}</td>
-        <td>{{player.MHName}}</td>
-        <td>{{player.character}}</td>
-      </tr>
-    </tbody>
-  </table>
+    <table class="darkTable">
+      <thead>
+        <tr>
+          <th>Discord ID</th>
+          <th>Discord Tag</th>
+          <th>MyHordes Name</th>
+          <th>Character</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(player, index) in players" :key="index">
+          <td>{{player.discordId}}</td>
+          <td>{{player.discordTag}}</td>
+          <td v-if="edition !== index">
+            {{player.MHName}}
+          </td>
+          <td v-if="edition === index">
+            <select v-model="MHName">
+              <option disabled value="">Please select one</option>
+              <option>A</option>
+              <option>B</option>
+              <option>C</option>
+            </select>
+          </td>
+          <td v-if="edition !== index">
+            {{player.character}}
+          </td>
+          <td v-if="edition === index">
+            <select v-model="character">
+              <option disabled value="">Please select one</option>
+              <option>A</option>
+              <option>B</option>
+              <option>C</option>
+            </select>
+          </td>
+          <td><button @click="edit(index)">Edit</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <input type="submit" @click="submit()" />
 </template>
 
 <script lang="ts">
@@ -27,31 +50,49 @@ export default defineComponent({
 	name: 'Admin',
   data() {
     return {
-      players: {} as Array<any>
+      players: {} as Array<any>,
+      edition: undefined as number | undefined,
+      MHName: undefined as string | undefined,
+      character: undefined as string | undefined
     }
   },
   methods: {
-    async click(): Promise<void> {
+    edit(index: number): void {
+      this.edition = index;
+      // console.log(this.players[this.edition])
+    },
+    async submit(): Promise<void> {
+      let MHName: string = this.players[this.edition!].MHName
+      let character: string = this.players[this.edition!].character
+      if (this.edition! >= 0) {
+        if(this.MHName) {
+          MHName = this.MHName
+          this.MHName = undefined
+        }
+        if(this.character) {
+          character = this.character
+          this.character = undefined
+        }
+        let playersToSort = await AdminService.updatePlayer(this.players[this.edition!].discordId, MHName, character)
+        this.players = playersToSort.sort((a, b) => b.discordId - a.discordId)
+        this.edition = undefined
+      }
+    }
+  },
+  async mounted(): Promise<void> {
       try {
-        this.players = await AdminService.getPannel();
+        let playersToSort = await AdminService.getPannel();
+        this.players = playersToSort.sort((a, b) => b.discordId - a.discordId)
       } catch (err) {
         console.error(err)
       }
-      console.log(this.players)
     }
-  }
 });
 
 
 </script>
 
 <style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
   table.darkTable {
   border: 2px solid #000000;
   background-color: #4A4A4A;
@@ -99,5 +140,5 @@ table.darkTable tfoot {
 table.darkTable tfoot td {
   font-size: 12px;
 }
-}
+
 </style>
