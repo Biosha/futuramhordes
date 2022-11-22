@@ -11,9 +11,9 @@
         "node": "=18"
     },
     "scripts": {
-        "start:back": "cd back && yarn run serve",
-        "start:front": "cd futuramhordes && yarn run serve",
-        "serve": "concurrently -k -n \"back,front\" -p \"[{name}]\" -c \"blue,green,orange\" \"yarn run start:back\" \"yarn run start:front\"",
+        "start:back": "cd back && npm run serve",
+        "start:front": "cd futuramhordes && npm run serve",
+        "serve": "concurrently -k -n \"back,front\" -p \"[{name}]\" -c \"blue,green,orange\" \"npm run start:back\" \"npm run start:front\"",
         "build:back": "cd back && yarn run build",
         "build:front": "cd futuramhordes && yarn run build",
         "build:ci": "yarn run build:ci",
