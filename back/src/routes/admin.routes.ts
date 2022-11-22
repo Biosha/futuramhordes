@@ -21,8 +21,7 @@ routes.get(`${commonPath}/getpannel`, async (req: Request, res: Response) => {
 
 routes.post(
 	`${commonPath}/authenticate`,
-	[body('discord').exists().isString(),
-	body('discordTag').exists().isString()],
+	[body('discord').exists().isString(), body('discordTag').exists().isString()],
 	async (req: Request, res: Response) => {
 		if (!validationResult(req).isEmpty()) {
 			return res.status(400).json({ errors: validationResult(req) });
@@ -40,9 +39,7 @@ routes.post(
 
 routes.post(
 	`${commonPath}/update`,
-	[body('discord').exists().isString(),
-	body('MHName').exists().isString(),
-	body('character').exists().isString()],
+	[body('discord').exists().isString(), body('MHName').exists().isString(), body('character').exists().isString()],
 	async (req: Request, res: Response) => {
 		// if (!validationResult(req).isEmpty()) {
 		// 	return res.status(400).json({ errors: validationResult(req) });

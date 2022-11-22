@@ -10,9 +10,9 @@
 </template>
 
 <style scoped>
-@media (min-width: 1024px) {
   .about {
     /* max-height: 90vh; */
+    margin-top: 15px;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -28,5 +28,5 @@
     top: -10px;
   }
   
-}
+
 </style>

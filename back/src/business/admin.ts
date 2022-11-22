@@ -6,20 +6,15 @@ const playerRepository = AppDataSource.getRepository(Player);
 
 const getPannel = async (req: Request): Promise<Array<Player>> => {
 	const pannel: Array<Player> = await getAllPlayers();
-	console.log(pannel);
 	return pannel;
 };
 
 const updatePlayer = async (req: Request): Promise<Array<Player>> => {
-	console.log(req.body)
-	let player = await playerRepository.manager.findOneBy(Player, {discordId: req.body.discord}) as Player
-	console.log(player)
-	player.character = req.body.character
-	player.MHName = req.body.MHName
+	let player = (await playerRepository.manager.findOneBy(Player, { discordId: req.body.discord })) as Player;
+	player.character = req.body.character;
+	player.MHName = req.body.MHName;
 
-	await createPlayer(player)
-
-
+	await playerRepository.manager.save(player);
 
 	const pannel: Array<Player> = await getAllPlayers();
 	return pannel;

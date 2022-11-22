@@ -22,5 +22,4 @@ const getAllPlayers = (): Promise<Array<Player>> => {
 		.getMany();
 };
 
-
 export { createPlayer, getPlayer, getAllPlayers };
