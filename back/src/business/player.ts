@@ -12,7 +12,7 @@ const login = async (req: Request): Promise<boolean> => {
 		} as Player;
 		player = await createPlayer(player);
 	}
-	
+
 	return true;
 };
 

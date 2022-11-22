@@ -12,7 +12,7 @@
     <div class="wrapper">
 
       <nav>
-        <a v-if="!localStore.discord" id="login" href="https://discord.com/api/oauth2/authorize?client_id=1037714596343058492&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fdiscord&response_type=token&scope=identify">Login</a>
+        <a v-if="!localStore.discord" id="login" href="https://discord.com/api/oauth2/authorize?client_id=1037714596343058492&redirect_uri=http%3A%2F%2Fbiolysbox.freeboxos.fr%3A16385%2Fdiscord&response_type=token&scope=identify">Login</a>
         <a v-if="localStore.discord" @click="logout()">Logout</a>
         <RouterLink to="/casting">Casting</RouterLink>
         <RouterLink v-if="localStore.admin" to="/admin">Admin</RouterLink>

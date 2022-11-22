@@ -11,15 +11,13 @@ const getPannel = async (req: Request): Promise<Array<Player>> => {
 };
 
 const updatePlayer = async (req: Request): Promise<Array<Player>> => {
-	console.log(req.body)
-	let player = await playerRepository.manager.findOneBy(Player, {discordId: req.body.discord}) as Player
-	console.log(player)
-	player.character = req.body.character
-	player.MHName = req.body.MHName
+	console.log(req.body);
+	let player = (await playerRepository.manager.findOneBy(Player, { discordId: req.body.discord })) as Player;
+	console.log(player);
+	player.character = req.body.character;
+	player.MHName = req.body.MHName;
 
-	await createPlayer(player)
-
-
+	await createPlayer(player);
 
 	const pannel: Array<Player> = await getAllPlayers();
 	return pannel;
