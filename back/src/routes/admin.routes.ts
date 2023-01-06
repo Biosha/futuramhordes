@@ -23,6 +23,7 @@ routes.post(
 	`${commonPath}/authenticate`,
 	[body('discord').exists().isString(), body('discordTag').exists().isString()],
 	async (req: Request, res: Response) => {
+		console.log('coucou');
 		if (!validationResult(req).isEmpty()) {
 			return res.status(400).json({ errors: validationResult(req) });
 		}

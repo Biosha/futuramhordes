@@ -13,8 +13,8 @@ export const AppDataSource = new DataSource({
 	username: dbConfig.USER,
 	password: dbConfig.PASSWORD,
 	database: dbConfig.DB,
-	synchronize: true, // Set to true if schema need to be updated in dev
-	logging: getEnvironnement() === 'development',
+	synchronize: false, //true, // Set to true if schema need to be updated in dev
+	logging: true, //getEnvironnement() === 'development',
 	entities: [Player],
 	migrations: ['dist/migration/*.js'],
 	subscribers: []
