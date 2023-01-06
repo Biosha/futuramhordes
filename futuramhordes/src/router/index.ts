@@ -11,7 +11,7 @@ const router = createRouter({
     },
     {
       path: "/casting",
-      name: "Casting",
+      name: "CastingComp",
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -19,7 +19,7 @@ const router = createRouter({
     },
     {
       path: "/discord",
-      name: "Discord",
+      name: "DiscordComp",
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -27,12 +27,12 @@ const router = createRouter({
     },
     {
       path: "/admin",
-      name: "Admin",
+      name: "AdminComp",
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import("../views/Admin.vue"),
-    }
+    },
   ],
 });
 

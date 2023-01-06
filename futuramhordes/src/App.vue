@@ -10,43 +10,55 @@
     />
 
     <div class="wrapper">
-
       <nav>
-        <a v-if="!localStore.discord" id="login" href="https://discord.com/api/oauth2/authorize?client_id=1037714596343058492&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fdiscord&response_type=token&scope=identify">Login</a>
+        <a
+          v-if="!localStore.discord"
+          id="login"
+          :href="`https://discord.com/api/oauth2/authorize?client_id=1037714596343058492&redirect_uri=http%3A%2F%2F${URI}%2Fdiscord&response_type=token&scope=identify`"
+          >Login</a
+        >
         <RouterLink to="/casting">Casting</RouterLink>
         <RouterLink v-if="localStore.admin" to="/admin">Admin</RouterLink>
         <a v-if="localStore.discord" @click="logout()">Logout</a>
       </nav>
     </div>
   </header>
-
   <RouterView />
 </template>
 
 <script lang="ts">
 import { RouterLink, RouterView } from "vue-router";
-import { defineComponent } from 'vue';
-import { localStore } from '@/stores/local';
+import { defineComponent } from "vue";
+import { localStore } from "@/stores/local";
 import { PlayerService } from "./service/playerServices";
 
 export default defineComponent({
-	name: 'App',
+  name: "App",
   data() {
-      return {
-          localStore: localStore()
-      }
+    return {
+      localStore: localStore(),
+    };
   },
   methods: {
     async test(): Promise<void> {
-      await PlayerService.login(this.localStore.getDiscord!.id,`${this.localStore.getDiscord!.username}#${this.localStore.getDiscord!.discriminator}`)
+      await PlayerService.login(
+        this.localStore.getDiscord!.id,
+        `${this.localStore.getDiscord!.username}#${
+          this.localStore.getDiscord!.discriminator
+        }`
+      );
     },
     logout(): void {
       this.localStore.setAdmin(false);
       this.localStore.setDiscord(undefined);
+    },
+  },
+  computed: {
+    URI(): string {
+      return encodeURIComponent(window.location.host)
     }
   }
 });
-
 </script>
 
 <style scoped>
@@ -111,7 +123,7 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
-  a:first-of-type{
+  a:first-of-type {
     margin-left: -1rem;
   }
 }

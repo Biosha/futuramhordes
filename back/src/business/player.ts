@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { createPlayer, getPlayer } from '../dao/playerDAO.js';
+import { createPlayer, getAllPlayers, getPlayer } from '../dao/playerDAO.js';
 import { Player } from '../entity/player.js';
 
 const login = async (req: Request): Promise<boolean> => {
@@ -16,4 +16,18 @@ const login = async (req: Request): Promise<boolean> => {
 	return true;
 };
 
-export { login };
+const getCasting = async (req: Request): Promise<Array<response>> => {
+	const pannel: Array<Player> = await getAllPlayers();
+
+	return pannel.map(player => {
+		return { MHName: player.MHName, characterImage: player.characterImage, character: player.character };
+	});
+};
+
+interface response {
+	MHName: string;
+	characterImage: Buffer;
+	character: string;
+}
+
+export { login, getCasting };

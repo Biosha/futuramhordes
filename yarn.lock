@@ -1766,6 +1766,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@popperjs/core@npm:^2.9.0":
+  version: 2.11.6
+  resolution: "@popperjs/core@npm:2.11.6"
+  checksum: 47fb328cec1924559d759b48235c78574f2d71a8a6c4c03edb6de5d7074078371633b91e39bbf3f901b32aa8af9b9d8f82834856d2f5737a23475036b16817f0
+  languageName: node
+  linkType: hard
+
 "@rushstack/eslint-patch@npm:^1.1.4":
   version: 1.2.0
   resolution: "@rushstack/eslint-patch@npm:1.2.0"
@@ -5302,6 +5309,7 @@ __metadata:
     vitest: ^0.24.3
     vue: ^3.2.41
     vue-router: ^4.1.5
+    vue-tippy: v6
     vue-tsc: ^1.0.8
   languageName: unknown
   linkType: soft
@@ -9835,6 +9843,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tippy.js@npm:^6.3.7":
+  version: 6.3.7
+  resolution: "tippy.js@npm:6.3.7"
+  dependencies:
+    "@popperjs/core": ^2.9.0
+  checksum: cac955318a65288e8d2dca05059878b003c6e66f92c94f7810f5bc5448eb6646abdf7dacc9bd00020e2611592598d0aae3a28ec9a45349a159603c3fdddce5fb
+  languageName: node
+  linkType: hard
+
 "tmpl@npm:1.0.5":
   version: 1.0.5
   resolution: "tmpl@npm:1.0.5"
@@ -10679,6 +10696,17 @@ __metadata:
     de-indent: ^1.0.2
     he: ^1.2.0
   checksum: eba9d2eed6b7110c963bc356b47bdd11d4023d25148abb7e5f7826db2fefe7ad8a575787ee0d8fa47701d44a6f54bde475279b1319f44e1049271eb2419f93a7
+  languageName: node
+  linkType: hard
+
+"vue-tippy@npm:v6":
+  version: 6.0.0
+  resolution: "vue-tippy@npm:6.0.0"
+  dependencies:
+    tippy.js: ^6.3.7
+  peerDependencies:
+    vue: ^3.2.0
+  checksum: 0ec76915f31e5a616904b00aac75316f275f83f503f42690fb585dcfcfd4a7d311b72912e22650a9dad3870422862b77cdf2faf5bbec2bb424116ac8b1fb105f
   languageName: node
   linkType: hard
 
