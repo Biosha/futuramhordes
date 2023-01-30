@@ -6,7 +6,6 @@ import { forgeJWT } from '../utils/jwt.js';
 const login = async (req: Request): Promise<string> => {
 	let player: Player | null = await getPlayer(req.body.discord);
 
-
 	if (player === null) {
 		player = {
 			discordId: req.body.discord,

@@ -23,7 +23,8 @@ routes.get(`${commonPath}/getpannel`, jwtConfig(), async (req: Request, res: Res
 
 routes.post(
 	`${commonPath}/authenticate`,
-	[body('discord').exists().isString(), body('discordTag').exists().isString()], jwtConfig(),
+	[body('discord').exists().isString(), body('discordTag').exists().isString()],
+	jwtConfig(),
 	async (req: Request, res: Response) => {
 		if (!validationResult(req).isEmpty()) {
 			return res.status(400).json({ errors: validationResult(req) });
@@ -41,7 +42,8 @@ routes.post(
 
 routes.post(
 	`${commonPath}/update`,
-	[body('discord').exists().isString(), body('MHName').exists().isString(), body('character').exists().isString()], jwtConfig(),
+	[body('discord').exists().isString(), body('MHName').exists().isString(), body('character').exists().isString()],
+	jwtConfig(),
 	async (req: Request, res: Response) => {
 		// if (!validationResult(req).isEmpty()) {
 		// 	return res.status(400).json({ errors: validationResult(req) });
