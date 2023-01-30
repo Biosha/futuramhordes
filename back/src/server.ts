@@ -1,11 +1,13 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { loadConfigFile } from './utils/context.js';
+import { getConfig, loadConfigFile } from './utils/context.js';
 import 'reflect-metadata';
 import { AppDataSource } from './data-source.js';
 import adminRoutes from './routes/admin.routes.js';
 import playerRoutes from './routes/player.routes.js';
+import { Config } from './models/index.js';
+import { expressjwt } from 'express-jwt';
 
 const app = express();
 

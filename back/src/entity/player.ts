@@ -40,6 +40,11 @@ export class Player {
 	})
 	characterImage: Buffer;
 
+	@Column({
+		nullable: true
+	})
+	isAdmin: boolean;
+
 	@CreateDateColumn()
 	createdDate: Date;
 

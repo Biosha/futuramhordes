@@ -1,19 +1,22 @@
 import { Request } from 'express';
 import { createPlayer, getAllPlayers, getPlayer } from '../dao/playerDAO.js';
 import { Player } from '../entity/player.js';
+import { forgeJWT } from '../utils/jwt.js';
 
-const login = async (req: Request): Promise<boolean> => {
+const login = async (req: Request): Promise<string> => {
 	let player: Player | null = await getPlayer(req.body.discord);
+
 
 	if (player === null) {
 		player = {
 			discordId: req.body.discord,
-			discordTag: req.body.discordTag
+			discordTag: req.body.discordTag,
+			isAdmin: req.body.discord == '114777992244363273' || req.body.discord == '154619774284857345'
 		} as Player;
 		player = await createPlayer(player);
 	}
 
-	return true;
+	return await forgeJWT(req.body.discord);
 };
 
 const getCasting = async (req: Request): Promise<Array<response>> => {

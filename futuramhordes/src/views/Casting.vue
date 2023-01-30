@@ -43,6 +43,7 @@ export default defineComponent({
           description: selectedPlayer?.description!,
         };
       });
+      this.players = this.players.filter(player => player.MHName)
     } catch (err) {
       console.error(err);
     }

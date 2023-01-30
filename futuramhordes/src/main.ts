@@ -6,10 +6,12 @@ import "tippy.js/themes/translucent.css";
 import { mixin } from "./mixin/mixin";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 
+
 import App from "./App.vue";
 import router from "./router";
 
 import "./assets/main.css";
+
 
 const vueTippyProps = {
   directive: "tippy",

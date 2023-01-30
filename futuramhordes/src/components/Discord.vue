@@ -29,18 +29,13 @@ export default defineComponent({
       .then((result) => result.json())
       .then(async (response) => {
         this.localStore.setDiscord(response);
-        if (
-          response.id == "114777992244363273" ||
-          response.id == "154619774284857345"
-        ) {
-          this.localStore.setAdmin(true);
-        }
-        await PlayerService.login(
+        let JWT = await PlayerService.login(
           this.localStore.getDiscord!.id,
           `${this.localStore.getDiscord!.username}#${
             this.localStore.getDiscord!.discriminator
           }`
         );
+        this.localStore.setJwt(JWT);
         this.$router.push({ name: "Casting" });
       })
       .catch(console.error);
