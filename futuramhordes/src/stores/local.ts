@@ -35,7 +35,7 @@ export const localStore = defineStore("localStore", {
     ): void {
       this.discord = discord;
     },
-    setJwt(jwt: string): void {
+    setJwt(jwt: string | undefined): void {
       this.jwt = jwt;
     },
     setAdmin(admin: boolean): void {

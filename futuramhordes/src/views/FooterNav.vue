@@ -1,0 +1,146 @@
+<template>
+  <footer>
+    <nav
+      class="nav-container"
+      role="navigation"
+      aria-label="Navigation buttons"
+    >
+      <button
+        class="button"
+        type="button"
+        @click="prevQuestion()"
+        :disabled="currentQuestionIndex! < 1"
+      >
+        Back
+      </button>
+      <button
+        class="button button--next"
+        type="button"
+        @click="nextQuestion()"
+        :disabled="chosenAnswers![currentQuestionIndex!] == null || currentQuestionIndex! >= questions!.length"
+      >
+        {{ currentQuestionIndex == questions!.length - 1 ? "Submit" : "Next" }}
+      </button>
+      <ul class="nav-steps">
+        <li
+          class="nav-step"
+          v-for="(question, index) in questions"
+          :key="index"
+          @click="selectQuestion(index)"
+        >
+          <button
+            class="button"
+            type="button"
+            :disabled="chosenAnswers!.length < index"
+            :class="{ 'is-active': currentQuestionIndex == index }"
+          >
+            {{ index + 1 }}
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </footer>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  name: "FooterNav",
+  emits: ["update-question-index", "submit-response"],
+  props: {
+    questions: Array,
+    chosenAnswers: Array,
+    currentQuestionIndex: Number,
+  },
+  methods: {
+    // Decrement currentQuestionIndex
+    prevQuestion() {
+      if (this.questions!.length > 0 && this.currentQuestionIndex! > 0) {
+        this.$emit("update-question-index", this.currentQuestionIndex! - 1);
+      }
+    },
+    // Increment currentQuestionIndex
+    nextQuestion() {
+      if (this.currentQuestionIndex! + 1 < this.questions!.length) {
+        this.$emit("update-question-index", this.currentQuestionIndex! + 1);
+      } else {
+        this.$emit("submit-response");
+      }
+    },
+    // Update currentQuestionIndex to given index
+    selectQuestion(index: number) {
+      if (this.chosenAnswers!.length >= index) {
+        this.$emit("update-question-index", index);
+      }
+    },
+  },
+});
+</script>
+
+<style lang="scss" scoped>
+.button {
+  margin-top: 3rem;
+  color: #fff;
+  background-color: $btn-bg--active;
+  border-style: none;
+  padding: 0;
+  min-width: 140px;
+  padding: 1.25rem 2rem;
+  font-family: -system-ui, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.2;
+  border: 0;
+  border-radius: 1px;
+  white-space: nowrap;
+  text-decoration: none;
+  text-transform: capitalize;
+  transition: all 0.1s;
+  cursor: pointer;
+  &:hover {
+    background-color: $btn-hover;
+  }
+  &[disabled] {
+    color: #313030;
+    background-color: #a9aaac;
+    pointer-events: none;
+  }
+  &--next {
+    color: #fff;
+    background-color: $btn-bg--active;
+    &:hover {
+      background-color: $btn-hover;
+    }
+  }
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+}
+.nav-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  margin-top: 3rem;
+  .nav-steps {
+    flex: 1 0 100%;
+    margin-top: 2rem;
+    .nav-step {
+      margin: 10px 6px;
+    }
+    .button {
+      width: 3rem;
+      height: 3rem;
+      min-width: auto;
+      padding: 0;
+    }
+    .is-active {
+      color: #fff;
+      background-color: $btn-bg--active;
+    }
+  }
+}
+</style>

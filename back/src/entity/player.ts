@@ -6,8 +6,11 @@ import {
 	OneToOne,
 	CreateDateColumn,
 	UpdateDateColumn,
-	Relation
+	Relation,
+	ManyToOne
 } from 'typeorm';
+import { History } from './history.js';
+import { Team } from './team.js';
 
 @Entity()
 export class Player {
@@ -44,6 +47,16 @@ export class Player {
 		nullable: true
 	})
 	isAdmin: boolean;
+
+	@OneToMany(() => History, history => history.player, {
+		onDelete: 'CASCADE'
+	})
+	history: Relation<History[]>;
+
+	@Column({
+		nullable: true
+	})
+	team: string;
 
 	@CreateDateColumn()
 	createdDate: Date;

@@ -16,7 +16,8 @@ const getPlayer = (eternalTwinId: string): Promise<Player | null> => {
 			'player.isAdmin',
 			'player.discordTag',
 			'player.MHName',
-			'player.character'
+			'player.character',
+			'player.team'
 		])
 		.where('player.discordId = :eId', { eId: eternalTwinId })
 		.getOne();
@@ -25,7 +26,7 @@ const getPlayer = (eternalTwinId: string): Promise<Player | null> => {
 const getAllPlayers = (): Promise<Array<Player>> => {
 	return playerRepository
 		.createQueryBuilder('player')
-		.select(['player.id', 'player.discordId', 'player.discordTag', 'player.MHName', 'player.character'])
+		.select(['player.id', 'player.discordId', 'player.discordTag', 'player.MHName', 'player.character', 'player.team'])
 		.getMany();
 };
 

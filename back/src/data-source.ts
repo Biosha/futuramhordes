@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import dbConf from './config/db.config.js';
 import { getEnvironnement } from './utils/context.js';
-import { Player } from './entity/index.js';
+import { History, Player, Quiz, Team } from './entity/index.js';
 
 const dbConfig = dbConf(getEnvironnement());
 
@@ -14,8 +14,8 @@ export const AppDataSource = new DataSource({
 	password: dbConfig.PASSWORD,
 	database: dbConfig.DB,
 	synchronize: true, //true, // Set to true if schema need to be updated in dev
-	logging: false, //getEnvironnement() === 'development',
-	entities: [Player],
+	logging: true, //getEnvironnement() === 'development',
+	entities: [Player, History, Quiz, Team],
 	migrations: ['dist/migration/*.js'],
 	subscribers: []
 });

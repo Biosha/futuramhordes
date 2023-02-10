@@ -18,7 +18,8 @@
           >Login</a
         >
         <RouterLink to="/casting">Casting</RouterLink>
-        <RouterLink v-if="localStore.admin" to="/admin">Admin</RouterLink>
+        <RouterLink v-if="localStore.jwt" to="/quiz">Quiz</RouterLink>
+        <RouterLink v-if="localStore.jwt" to="/team">Team</RouterLink>
         <a v-if="localStore.discord" @click="logout()">Logout</a>
       </nav>
     </div>
@@ -51,17 +52,43 @@ export default defineComponent({
     logout(): void {
       this.localStore.setAdmin(false);
       this.localStore.setDiscord(undefined);
+      this.localStore.setJwt(undefined);
     },
   },
   computed: {
     URI(): string {
-      return encodeURIComponent(window.location.host)
-    }
-  }
+      return encodeURIComponent(window.location.host);
+    },
+  },
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.button {
+  min-width: 140px;
+  padding: 1.25rem 2rem;
+  font-family: -system-ui, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.2;
+  color: #313030;
+  background-color: $btn-bg;
+  border: 0;
+  border-radius: 1px;
+  white-space: nowrap;
+  text-decoration: none;
+  text-transform: capitalize;
+  transition: all 0.1s;
+  cursor: pointer;
+  &:hover {
+    color: #fff;
+    background-color: $btn-hover;
+  }
+  &[disabled] {
+    color: #313030;
+    background-color: #a9aaac;
+    pointer-events: none;
+  }
+}
 header {
   line-height: 1.5;
   max-height: 100vh;

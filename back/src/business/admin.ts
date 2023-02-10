@@ -11,7 +11,6 @@ const getPannel = async (req: Request): Promise<Array<Player>> => {
 	} else {
 		pannel = [];
 	}
-
 	return pannel;
 };
 
@@ -20,8 +19,10 @@ const updatePlayer = async (req: Request): Promise<Array<Player>> => {
 		throw new Error(`You're not admin`);
 	}
 	let player = (await playerRepository.manager.findOneBy(Player, { discordId: req.body.discord })) as Player;
+
 	player.character = req.body.character;
 	player.MHName = req.body.MHName;
+	player.team = req.body.team;
 
 	await playerRepository.manager.save(player);
 

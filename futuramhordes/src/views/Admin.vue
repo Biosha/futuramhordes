@@ -1,64 +1,104 @@
 <template>
-  <table class="darkTable">
-    <thead>
-      <tr>
-        <th>Discord ID</th>
-        <th>Discord Tag</th>
-        <th>MyHordes Name</th>
-        <th>Character</th>
-        <th>Edit</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(player, index) in players" :key="index">
-        <td>{{ player.discordId }}</td>
-        <td>{{ player.discordTag }}</td>
-        <td v-if="edition !== index">
-          {{ player.MHName }}
-        </td>
-        <td v-if="edition === index">
-          <input v-model="MHName" />
-        </td>
-        <td v-if="edition !== index">
-          {{ player.character }}
-        </td>
-        <td v-if="edition === index">
-          <select v-model="character">
-            <option disabled value="">Please select one</option>
-            <template
-              v-for="character in characterList"
-              :key="character.character"
-            >
-              <option>
-                {{ character.character }}
-              </option>
-            </template>
-          </select>
-        </td>
-        <td><button @click="edit(index)">Edit</button></td>
-      </tr>
-    </tbody>
-  </table>
-  <input type="submit" @click="submit()" />
+  <div>
+    <div>
+      <button @click="init()">INIT</button>
+      <button @click="tab = 1">Joueurs</button>
+      <button @click="tab = 2">Ajouter questions</button>
+      <button @click="tab = 3">Lister questions</button>
+    </div>
+    <div v-if="tab === 1">
+      <table class="darkTable">
+        <thead>
+          <tr>
+            <th>Discord ID</th>
+            <th>Discord Tag</th>
+            <th>MyHordes Name</th>
+            <th>Character</th>
+            <th>Team</th>
+            <th>Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(player, index) in players" :key="index">
+            <td>{{ player.discordId }}</td>
+            <td>{{ player.discordTag }}</td>
+            <td v-if="edition !== index">
+              {{ player.MHName }}
+            </td>
+            <td v-if="edition === index">
+              <input v-model="MHName" />
+            </td>
+            <td v-if="edition !== index">
+              {{ player.character }}
+            </td>
+            <td v-if="edition === index">
+              <select v-model="character">
+                <option disabled value="">Please select one</option>
+                <template
+                  v-for="character in characterList"
+                  :key="character.character"
+                >
+                  <option>
+                    {{ character.character }}
+                  </option>
+                </template>
+              </select>
+            </td>
+            <td v-if="edition !== index">
+              {{ player.team }}
+            </td>
+            <td v-if="edition === index">
+              <select v-model="team">
+                <option disabled value="">Please select one</option>
+                <template v-for="team in teamList" :key="team">
+                  <option>
+                    {{ team }}
+                  </option>
+                </template>
+              </select>
+            </td>
+            <td><button @click="edit(index)">Edit</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <input type="submit" @click="submit()" />
+    </div>
+    <QuizAdmin v-if="tab === 2"></QuizAdmin>
+    <AllQuestion v-if="tab === 3"></AllQuestion>
+  </div>
 </template>
 
 <script lang="ts">
+import { teamList } from "@/constant/teamList";
 import { characterList } from "@/constant/characterList";
 import { AdminService } from "@/service/adminServices";
 import { defineComponent } from "vue";
+import QuizAdmin from "@/components/QuizAdmin.vue";
+import AllQuestion from "@/components/AllQuestion.vue";
 
 export default defineComponent({
   name: "AdminComp",
+  components: {
+    QuizAdmin,
+    AllQuestion,
+  },
   data() {
     return {
       players: {} as Array<any>,
       edition: undefined as number | undefined,
       MHName: undefined as string | undefined,
       character: undefined as string | undefined,
+      team: undefined as string | undefined,
       characterList: characterList,
+      teamList: teamList,
+      tab: 1 as number,
     };
   },
   methods: {
+    async init(): Promise<void> {
+      const test = await AdminService.init();
+      console.log(test);
+    },
     edit(index: number): void {
       this.edition = index;
       // console.log(this.players[this.edition])
@@ -66,6 +106,7 @@ export default defineComponent({
     async submit(): Promise<void> {
       let MHName: string = this.players[this.edition!].MHName;
       let character: string = this.players[this.edition!].character;
+      let team: string = this.players[this.edition!].team;
       if (this.edition! >= 0) {
         if (this.MHName) {
           MHName = this.MHName;
@@ -75,10 +116,15 @@ export default defineComponent({
           character = this.character;
           this.character = undefined;
         }
+        if (this.team) {
+          team = this.team;
+          this.team = undefined;
+        }
         let playersToSort = await AdminService.updatePlayer(
           this.players[this.edition!].discordId,
           MHName,
-          character
+          character,
+          team
         );
         this.players = playersToSort.sort((a, b) => b.discordId - a.discordId);
         this.edition = undefined;
