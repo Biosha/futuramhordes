@@ -3,7 +3,7 @@ import type { AxiosInstance } from "axios";
 import urlJoin from "url-join";
 import { localStore } from "@/stores/local";
 
-const API_SERVER = new URL(
+const API_SERVER = new URL(process.env.API??
   urlJoin(
     `${encodeURI(window.location.protocol)}//${encodeURI(
       window.location.hostname
