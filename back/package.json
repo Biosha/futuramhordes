@@ -5,7 +5,7 @@
    "main": "src/server.ts",
    "type": "module",
    "scripts": {
-      "serve": "npm run prettier && concurrently -k -n \"Typescript,Node\" -p \"[{name}]\" -c \"blue,green\" \"tsc --watch\" \"nodemon dist/server.js\"",
+      "serve": "yarn install && npm run prettier && concurrently -k -n \"Typescript,Node\" -p \"[{name}]\" -c \"blue,green\" \"tsc --watch\" \"nodemon dist/server.js\"",
       "debug": "concurrently -k -n \"Typescript,Node\" -p \"[{name}]\" -c \"blue,green\" \"tsc --watch\" \"node --inspect dist/server.js\"",
       "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
       "test:ci": "tsc && NODE_ENV=development jest --config ./jest.config.json --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --watchAll=false",

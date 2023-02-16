@@ -1,0 +1,13 @@
+[general]
+serverUri = 'http://localhost:8081/'
+frontUri = 'http://localhost:8080/'
+
+[db]
+host = 'ep-super-sun-673773.eu-central-1.aws.neon.tech'
+user = 'Biosha'
+password = '94vyVLCFqBEP'
+dbName = 'neondb'
+
+[jwt]
+secretKey = '6d927010-33ef-418b-9630-2faed53cbe5e'
+expiration = 2592000

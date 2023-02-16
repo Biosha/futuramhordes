@@ -38,7 +38,7 @@ package-lock.json
 
 # Config file
 etwin.toml
-config_development.toml
+# config_development.toml
 futuramhordes/.env.development
 
 futuramhordes/.env.development
