@@ -1,6 +1,6 @@
 export interface Character {
   MHName: string;
-  characterImage: Buffer;
+  characterImage?: Image;
   character: string;
   description: string;
   fullName?: string;
@@ -21,12 +21,19 @@ export interface Question {
 export interface Correction {
   id: number;
   question: string;
-  image?: Buffer;
+  image?: Image;
   playerChoice: string;
   answer: string;
   proof?: string;
   result: boolean;
 }
+
+export interface Image {
+	data: Array<number>;
+	type: string;
+}
+
+
 
 export interface reponse {
   id?: number;
@@ -36,7 +43,7 @@ export interface reponse {
 
 export interface QuestionDisplayed {
   id: number;
-  image?: Buffer;
+  image?: Image;
   question: string;
   answers: Array<string>;
 }

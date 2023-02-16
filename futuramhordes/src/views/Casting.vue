@@ -28,20 +28,25 @@ export default defineComponent({
       players: [] as Array<Character>,
     };
   },
+  methods: {
+    getImgURL(path: string, imgName: string): string {
+      return (new URL(`/src/assets/${path}/${imgName}.webp`, import.meta.url)).toString();
+    }
+  },
   async mounted(): Promise<void> {
     try {
       let test = await PlayerService.getCasting();
-      this.players = test.map((player) => {
+      test.forEach((player) => {
         let selectedPlayer = characterList.find(
           (item) => item.character === player.character
         );
-        return {
+        this.players.push({
           MHName: player.MHName,
           character: player.character,
           fullName: selectedPlayer?.fullName,
           characterImage: undefined,
           description: selectedPlayer?.description!,
-        };
+        });
       });
       this.players = this.players.filter((player) => player.MHName);
     } catch (err) {

@@ -22,7 +22,7 @@
         <img
           v-if="questions[currentQuestionIndex].image"
           :src="`data:image/webp;base64,${transformImage(
-            questions[currentQuestionIndex].image.data
+            questions[currentQuestionIndex].image!.data
           )}`"
         />
         <div class="answers-container">
