@@ -17,7 +17,7 @@
         class="button button--next"
         type="button"
         @click="nextQuestion()"
-        :disabled="chosenAnswers![currentQuestionIndex!] == null || currentQuestionIndex! >= questions!.length"
+        :disabled="chosenAnswers[currentQuestionIndex!].answerId === null || currentQuestionIndex! >= questions!.length"
       >
         {{ currentQuestionIndex == questions!.length - 1 ? "Submit" : "Next" }}
       </button>
@@ -31,7 +31,9 @@
           <button
             class="button"
             type="button"
-            :disabled="chosenAnswers!.length < index"
+            :disabled="
+              chosenAnswers.filter((i) => i.answerId !== null).length < index
+            "
             :class="{ 'is-active': currentQuestionIndex == index }"
           >
             {{ index + 1 }}
@@ -43,14 +45,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import type { reponse } from "@/models/character";
+import { defineComponent, type PropType } from "vue";
 
 export default defineComponent({
   name: "FooterNav",
   emits: ["update-question-index", "submit-response"],
   props: {
     questions: Array,
-    chosenAnswers: Array,
+    chosenAnswers: { type: Array as PropType<Array<reponse>>, required: true },
     currentQuestionIndex: Number,
   },
   methods: {

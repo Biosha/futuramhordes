@@ -97,7 +97,6 @@ export interface Question {
 routes.get(`${commonPath}/getall`, jwtConfig(), async (req: Request, res: Response) => {
 	const retour = await AppDataSource.getRepository(Quiz).find();
 
-
 	try {
 		if (req.auth?.isAdmin) {
 			return res.status(200).send(retour);
@@ -156,7 +155,12 @@ routes.post(
 		};
 
 		try {
-			await AppDataSource.getRepository(Quiz).createQueryBuilder().update(Quiz).where('id = :i', { i: req.params.id}).set(updateQuestion).execute()
+			await AppDataSource.getRepository(Quiz)
+				.createQueryBuilder()
+				.update(Quiz)
+				.where('id = :i', { i: req.params.id })
+				.set(updateQuestion)
+				.execute();
 			return res.status(200).send();
 		} catch (err) {
 			res.status(500).send(err.message);

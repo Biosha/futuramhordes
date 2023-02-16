@@ -78,50 +78,92 @@ const getTeam = async (req: Request): Promise<TeamR> => {
 };
 
 const getQuiz = async (req: Request): Promise<Array<Question>> => {
-	const totalQuestion = await AppDataSource.getRepository(Quiz).count()
-	
+	const totalQuestion = await AppDataSource.getRepository(Quiz).count();
+
 	let questionIdList = [];
-	while(questionIdList.length < 5){
+	while (questionIdList.length < 5) {
 		var r = Math.floor(Math.random() * totalQuestion) + 1;
-		if(questionIdList.indexOf(r) === -1) questionIdList.push(r);
+		if (questionIdList.indexOf(r) === -1) questionIdList.push(r);
 	}
 
 	let questionList = await AppDataSource.getRepository(Quiz).find({
 		where: [
-			{id: questionIdList[0]},
-			{id: questionIdList[1]},
-			{id: questionIdList[2]},
-			{id: questionIdList[3]},
-			{id: questionIdList[4]},
+			{ id: questionIdList[0] },
+			{ id: questionIdList[1] },
+			{ id: questionIdList[2] },
+			{ id: questionIdList[3] },
+			{ id: questionIdList[4] }
 		]
-	})
+	});
 
-	let final: Array<Question> = questionList.map(q => {
-		return {question: q.question, answers: [q.first, q.second, q.third, q.fourth]}
-	})
-
-	
-	
-	return final
+	let final: Array<Question> = questionList
+		.map(q => {
+			return { id: q.id, question: q.question, answers: [q.first, q.second, q.third, q.fourth], image: q.image };
+		})
+		.sort((a, b) => 0.5 - Math.random());
+	console.log(final);
+	return final;
 };
 
-const quizResponse = async (req: Request): Promise<string> => {
-	console.log(req.body);
-	return 'ok';
-};
-
-function shuffle(array: Array<number>) {
-	var tmp, current, top = array.length;
-	if(top) while(--top) {
-	  current = Math.floor(Math.random() * (top + 1));
-	  tmp = array[current];
-	  array[current] = array[top];
-	  array[top] = tmp;
+const quizResponse = async (req: Request): Promise<Array<Correction>> => {
+	let reponsesQuiz: Array<quizReponse> = req.body.responses.map(
+		(r: { id: string; answer: string; answerId: string }) => {
+			return { id: parseInt(r.id), answer: r.answer, answerId: parseInt(r.answerId) + 1 };
+		}
+	);
+	let prout: Array<Correction> = [];
+	for (const r of reponsesQuiz) {
+		prout.push(await checkReponseFromQuiz(r.id!, r.answerId!, r.answer!));
 	}
-	return array;
-  }
+	return prout;
+};
+
+async function checkReponseFromQuiz(questionId: number, reponseId: number, answerPlayer: string): Promise<Correction> {
+	let test = await AppDataSource.getRepository(Quiz).findOneBy({ id: questionId });
+	return {
+		id: test?.id,
+		question: test?.question,
+		image: test?.image,
+		playerChoice: answerPlayer,
+		answer: CorrectAnswer(test!),
+		proof: test?.proof,
+		result: test?.answer === reponseId
+	};
+}
+
+function CorrectAnswer(question: Quiz): string {
+	switch (question.answer) {
+		case 1:
+			return question.first;
+		case 2:
+			return question.second;
+		case 3:
+			return question.third;
+		case 4:
+			return question.fourth;
+		default:
+			return question.first;
+	}
+}
+export interface Correction {
+	id?: number;
+	question?: string;
+	image?: Buffer;
+	playerChoice: string;
+	answer?: string;
+	proof?: string;
+	result: boolean;
+}
+
+export interface quizReponse {
+	id?: number;
+	answer?: string;
+	answerId?: number;
+}
 
 export interface Question {
+	id: number;
+	image?: Buffer;
 	question: string;
 	answers: Array<string>;
 }

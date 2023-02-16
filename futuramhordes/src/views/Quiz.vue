@@ -1,7 +1,7 @@
 <template>
   <div class="quiz-container">
     <button
-      v-if="!isStarted"
+      v-if="!isStarted && !isFinished"
       class="button button--start"
       type="button"
       @click="startQuiz()"
@@ -19,13 +19,26 @@
         :key="currentQuestionIndex"
       >
         <h2>{{ questions[currentQuestionIndex].question }}</h2>
+        <img
+          v-if="questions[currentQuestionIndex].image"
+          :src="`data:image/webp;base64,${transformImage(
+            questions[currentQuestionIndex].image.data
+          )}`"
+        />
         <div class="answers-container">
           <div
             class="answer answer--option"
-            v-for="answer in questions[currentQuestionIndex].answers"
-            @click="selectAnswer(answer, currentQuestionIndex)"
+            v-for="(answer, index) in questions[currentQuestionIndex].answers"
+            @click="
+              selectAnswer(
+                answer,
+                currentQuestionIndex,
+                questions[currentQuestionIndex].id,
+                index
+              )
+            "
             :class="{
-              'is-selected': chosenAnswers[currentQuestionIndex] == answer,
+              'is-selected': selectedAnswer == answer,
             }"
             :key="answer"
           >
@@ -41,27 +54,45 @@
         </div>
       </div>
     </div>
+
+    <div v-if="isFinished">
+      <QuizResult :result="result" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import LoadingQuiz from "./Loading.vue";
 import FooterNav from "./FooterNav.vue";
+import QuizResult from "../components/quiReponse.vue";
 import { defineComponent } from "vue";
 import { PlayerService } from "@/service/playerServices";
-import type { Question } from "@/models/character";
+import type {
+  Correction,
+  QuestionDisplayed,
+  reponse,
+} from "@/models/character";
 
 export default defineComponent({
   name: "QuizComp",
   components: {
     LoadingQuiz,
     FooterNav,
+    QuizResult,
   },
   data() {
     return {
       isStarted: false,
-      questions: [] as Array<Question>,
-      chosenAnswers: [] as Array<string>,
+      isFinished: false,
+      result: undefined as Array<Correction> | undefined,
+      questions: [] as Array<QuestionDisplayed>,
+      chosenAnswers: [
+        { answer: undefined, id: undefined, answerId: null },
+        { answer: undefined, id: undefined, answerId: null },
+        { answer: undefined, id: undefined, answerId: null },
+        { answer: undefined, id: undefined, answerId: null },
+        { answer: undefined, id: undefined, answerId: null },
+      ] as Array<reponse>,
       currentQuestionIndex: 0,
     };
   },
@@ -72,15 +103,43 @@ export default defineComponent({
       this.questions = await PlayerService.getQuiz();
     },
     // Set user's chosen answer
-    selectAnswer(answer: string, index: number) {
+    selectAnswer(
+      answer: string,
+      index: number,
+      questionId: number,
+      reponseIndex: number
+    ) {
       if (this.chosenAnswers.length > index) {
-        this.chosenAnswers.splice(index, 1, answer);
+        this.chosenAnswers.splice(index, 1, {
+          answer: answer,
+          id: questionId,
+          answerId: reponseIndex,
+        });
       } else {
-        this.chosenAnswers.push(answer);
+        this.chosenAnswers.push({
+          answer: answer,
+          id: questionId,
+          answerId: reponseIndex,
+        });
       }
     },
+    transformImage(image: Array<number>): string {
+      return btoa(
+        image.reduce(
+          (data: string, byte: number) => data + String.fromCharCode(byte),
+          ""
+        )
+      );
+    },
     async sendResponses(): Promise<void> {
-      await PlayerService.quiz(this.chosenAnswers);
+      this.result = await PlayerService.quiz(this.chosenAnswers);
+      this.isStarted = false;
+      this.isFinished = true;
+    },
+  },
+  computed: {
+    selectedAnswer(): string | undefined {
+      return this.chosenAnswers[this.currentQuestionIndex].answer;
     },
   },
 });
@@ -177,6 +236,10 @@ h3 {
   flex-flow: row wrap;
   max-width: 40rem;
   width: 100%;
+  justify-content: center;
+  img {
+    max-width: 256px;
+  }
   & > * {
     flex: 1 1 100%;
   }

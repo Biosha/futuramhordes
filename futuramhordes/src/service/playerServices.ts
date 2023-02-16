@@ -1,4 +1,11 @@
-import type { Character, Question, Team } from "@/models/character";
+import type {
+  Character,
+  Correction,
+  Question,
+  QuestionDisplayed,
+  reponse,
+  Team,
+} from "@/models/character";
 import { http } from "@/utils";
 
 export const PlayerService = {
@@ -17,13 +24,13 @@ export const PlayerService = {
       .then((res) => Promise.resolve(res.data))
       .catch((err) => Promise.reject(err));
   },
-  getQuiz(): Promise<Array<Question>> {
+  getQuiz(): Promise<Array<QuestionDisplayed>> {
     return http()
       .get(`/player/getquiz`)
       .then((res) => Promise.resolve(res.data))
       .catch((err) => Promise.reject(err));
   },
-  quiz(responses: Array<string>): Promise<string> {
+  quiz(responses: Array<reponse>): Promise<Array<Correction>> {
     return http()
       .post(`/player/quiz`, { responses: responses })
       .then((res) => Promise.resolve(res.data))

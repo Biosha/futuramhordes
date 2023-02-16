@@ -54,15 +54,17 @@
             <td>Preuve</td>
             <td><textarea v-model="questionEdit.proof" /></td>
           </tr>
-		  <tr>
-			<td>Image</td>
-			<td><img
-            v-if="questionEdit.image"
-            :src="`data:image/webp;base64,${transformImage(
-              questionEdit.image.data
-            )}`"
-          /></td>
-		  </tr>
+          <tr>
+            <td>Image</td>
+            <td>
+              <img
+                v-if="questionEdit.image"
+                :src="`data:image/webp;base64,${transformImage(
+                  questionEdit.image.data
+                )}`"
+              />
+            </td>
+          </tr>
         </tbody>
       </table>
       <input type="file" ref="file" @change="upfile" />
@@ -139,14 +141,14 @@ export default defineComponent({
       this.formData.delete("file");
       this.formData.append("file", image!.files![0]);
     },
-	transformImage(image: Array<number>): string {
+    transformImage(image: Array<number>): string {
       return btoa(
         image.reduce(
           (data: string, byte: number) => data + String.fromCharCode(byte),
           ""
         )
       );
-    }
+    },
   },
   async mounted(): Promise<void> {
     try {
@@ -196,7 +198,7 @@ table {
       background-color: #f3ca92;
       border: 1px solid #c88f44;
       height: 75px;
-	  img {
+      img {
         max-width: 256px;
       }
     }
