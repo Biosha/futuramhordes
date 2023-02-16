@@ -10,6 +10,7 @@ export const AppDataSource = new DataSource({
 	type: 'postgres',
 	host: dbConfig.HOST,
 	port: 5432,
+	ssl: true,
 	username: dbConfig.USER,
 	password: dbConfig.PASSWORD,
 	database: dbConfig.DB,

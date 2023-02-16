@@ -7,7 +7,7 @@ const API_SERVER = new URL(
   urlJoin(
     `${encodeURI(window.location.protocol)}//${encodeURI(
       window.location.hostname
-    )}:${import.meta.env.VITE_API_PORT}`
+    )}`
   )
 );
 const API_BASE = urlJoin(API_SERVER.toString(), "api/v1");
