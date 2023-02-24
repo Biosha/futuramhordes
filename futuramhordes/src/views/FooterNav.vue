@@ -13,6 +13,12 @@
       >
         Back
       </button>
+      <div id="clockdiv">
+        <div>
+          <span class="seconds">{{ timer }}</span>
+          <div class="smalltext">Seconds</div>
+        </div>
+      </div>
       <button
         class="button button--next"
         type="button"
@@ -55,6 +61,7 @@ export default defineComponent({
     questions: Array,
     chosenAnswers: { type: Array as PropType<Array<reponse>>, required: true },
     currentQuestionIndex: Number,
+    timer: Number
   },
   methods: {
     // Decrement currentQuestionIndex
@@ -76,12 +83,38 @@ export default defineComponent({
       if (this.chosenAnswers!.length >= index) {
         this.$emit("update-question-index", index);
       }
-    },
+    }
   },
 });
 </script>
 
 <style lang="scss" scoped>
+.smalltext{
+	padding-top: 5px;
+	font-size: 16px;
+}
+#clockdiv{
+	font-family: sans-serif;
+	color: #fff;
+	display: inline-block;
+	font-weight: 100;
+	text-align: center;
+	font-size: 30px;
+}
+
+#clockdiv > div{
+	padding: 10px;
+	border-radius: 3px;
+	background: $btn-bg--active;
+	display: inline-block;
+}
+
+#clockdiv div > span{
+	padding: 15px;
+	border-radius: 3px;
+	background: #00816A;
+	display: inline-block;
+}
 .button {
   margin-top: 3rem;
   color: #fff;

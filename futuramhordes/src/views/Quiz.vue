@@ -48,6 +48,7 @@
             :questions="questions"
             :chosenAnswers="chosenAnswers"
             :currentQuestionIndex="currentQuestionIndex"
+            :timer="timer"
             v-on:update-question-index="currentQuestionIndex = $event"
             v-on:submit-response="sendResponses()"
           />
@@ -94,6 +95,7 @@ export default defineComponent({
         { answer: undefined, id: undefined, answerId: null },
       ] as Array<reponse>,
       currentQuestionIndex: 0,
+      timer: 0 as number
     };
   },
   methods: {
@@ -101,6 +103,7 @@ export default defineComponent({
     async startQuiz() {
       this.isStarted = true;
       this.questions = await PlayerService.getQuiz();
+      this.initializeClock();
     },
     // Set user's chosen answer
     selectAnswer(
@@ -136,12 +139,22 @@ export default defineComponent({
       this.isStarted = false;
       this.isFinished = true;
     },
+    initializeClock() {
+      this.timer = 60;
+      const timer = setInterval(() => this.timer -= 1, 1000)
+      setTimeout(() => clearInterval(timer), 61000)
+    }
   },
   computed: {
     selectedAnswer(): string | undefined {
       return this.chosenAnswers[this.currentQuestionIndex].answer;
     },
   },
+  watch: {
+    async timer(newTimer, oldTimer) {
+      if (newTimer === 0) await this.sendResponses()
+    }
+  }
 });
 </script>
 

@@ -3,13 +3,12 @@ import type { AxiosInstance } from "axios";
 import urlJoin from "url-join";
 import { localStore } from "@/stores/local";
 
-const API_SERVER = new URL(process.env.API??
-  urlJoin(
+// const API_SERVER = new URL('https://futuraback-production.up.railway.app/')
+const API_SERVER =  urlJoin(
     `${encodeURI(window.location.protocol)}//${encodeURI(
       window.location.hostname
-    )}`
-  )
-);
+    )}:8081`
+  );
 const API_BASE = urlJoin(API_SERVER.toString(), "api/v1");
 
 export const http = function (): AxiosInstance {

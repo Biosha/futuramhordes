@@ -1,7 +1,7 @@
-import { Request } from 'express';
+import { Request } from 'express-jwt';
 import { createPlayer, getAllPlayers, getPlayer } from '../dao/playerDAO.js';
 import { AppDataSource } from '../data-source.js';
-import { Quiz } from '../entity/index.js';
+import { History, Quiz } from '../entity/index.js';
 import { Player } from '../entity/player.js';
 import { Team } from '../entity/team.js';
 import { forgeJWT } from '../utils/jwt.js';
@@ -78,6 +78,29 @@ const getTeam = async (req: Request): Promise<TeamR> => {
 };
 
 const getQuiz = async (req: Request): Promise<Array<Question>> => {
+	const player = await AppDataSource.manager.findOne(Player, {
+		where: {
+			discordId: req.auth!.playerId
+		},
+		relations: {
+			history: true
+		}
+	});
+	const day = new Date().getDate();
+	const month = new Date().getMonth();
+
+	if (
+		player?.history.filter(h => h.createdDate.getMonth() === month && h.createdDate.getDate() === day) &&
+		player?.history.filter(h => h.createdDate.getMonth() === month && h.createdDate.getDate() === day).length > 0
+	) {
+		let firstQuestion = await AppDataSource.getRepository(Quiz).findOne({
+			where: { id: 1 }
+		});
+		let fake = [firstQuestion, firstQuestion, firstQuestion, firstQuestion, firstQuestion];
+		return fake.map(q => {
+			return { id: q!.id, question: q!.question, answers: [q!.first, q!.second, q!.third, q!.fourth] };
+		});
+	}
 	const totalQuestion = await AppDataSource.getRepository(Quiz).count();
 
 	let questionIdList = [];
@@ -101,21 +124,43 @@ const getQuiz = async (req: Request): Promise<Array<Question>> => {
 			return { id: q.id, question: q.question, answers: [q.first, q.second, q.third, q.fourth], image: q.image };
 		})
 		.sort((a, b) => 0.5 - Math.random());
-	console.log(final);
 	return final;
 };
 
 const quizResponse = async (req: Request): Promise<Array<Correction>> => {
-	let reponsesQuiz: Array<quizReponse> = req.body.responses.map(
-		(r: { id: string; answer: string; answerId: string }) => {
-			return { id: parseInt(r.id), answer: r.answer, answerId: parseInt(r.answerId) + 1 };
-		}
-	);
+	let reponsesQuiz: Array<quizReponse> = req.body.responses
+		.filter((r: { answerId: string | null }) => r.answerId !== null)
+		.map((r: { id: string; answer: string; answerId: string }) => {
+			return { id: parseInt(r.id!), answer: r.answer, answerId: parseInt(r.answerId!) + 1 };
+		});
 	let prout: Array<Correction> = [];
 	for (const r of reponsesQuiz) {
 		prout.push(await checkReponseFromQuiz(r.id!, r.answerId!, r.answer!));
 	}
-	return prout;
+	let result = prout.filter(r => r.result).length;
+	const player = await AppDataSource.manager.findOne(Player, {
+		where: {
+			discordId: req.auth!.playerId
+		},
+		relations: {
+			history: true
+		}
+	});
+	const team = await AppDataSource.manager.findOneBy(Team, { name: player?.team });
+	const day = new Date().getDate();
+	const month = new Date().getMonth();
+	if (
+		player?.history.filter(h => h.createdDate.getMonth() === month && h.createdDate.getDate() === day) &&
+		player?.history.filter(h => h.createdDate.getMonth() === month && h.createdDate.getDate() === day).length > 0
+	) {
+		return prout;
+	} else {
+		let newHistory = new History(result, player);
+		team!.points! += result;
+		await AppDataSource.manager.save(newHistory);
+		await AppDataSource.manager.save(team);
+		return prout;
+	}
 };
 
 async function checkReponseFromQuiz(questionId: number, reponseId: number, answerPlayer: string): Promise<Correction> {
